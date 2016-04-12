@@ -1,0 +1,6 @@
+Organization ID rxf9qj
+Device Type ABCDEF
+Device ID b827eb175f1d
+Authentication Method token
+Authentication Token uS*RJBHDdyyrollHoy
+
