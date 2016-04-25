@@ -1,0 +1,159 @@
+<!doctype html>
+<html>
+
+<head>
+    <title>Test Page</title>
+    <script src="Chart.bundle.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <style>
+        canvas {
+            -moz-user-select: none;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div style="width:75%;">
+        <canvas id="canvas"></canvas>
+    </div>
+    <br>
+    <br>
+    <button id="addData">Add Data</button>
+    <button id="removeData">Remove Data</button>
+    <script>
+        var output=[];
+        //function to fetch the data to initialize the graph with
+        $.ajax({
+                url: "https://thingspeak.com/channels/107738/fields/1.json",
+                async: false,
+                dataType: 'json',
+                success: function(data) {
+                    //alert(data.length);
+                    //alert(data.feeds[0].entry_id);
+                    //alert()
+                    for(var i in data.feeds){
+                    output.push({value:data.feeds[i].field1, timestamp: new Date(data.feeds[i].created_at)});
+                    }
+                }
+            });
+
+        var MONTHS = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"];
+        var randomScalingFactor = function() {
+            return Math.round(Math.random() * 100 * (Math.random() > 0.5 ? -1 : 1));
+        };
+        var randomColorFactor = function() {
+            return Math.round(Math.random() * 255);
+        };
+        var randomColor = function(opacity) {
+            return 'rgba(' + randomColorFactor() + ',' + randomColorFactor() + ',' + randomColorFactor() + ',' + (opacity || '.3') + ')';
+        };
+
+        var config = {
+            type: 'line',
+            data: {
+                labels: [],
+                //labels: ["1", "2", "3", "4", "5", "6", "7","8"],
+                datasets: [{
+                    label: "Initial Data",
+                    data: [],
+                    //data: [randomScalingFactor(), randomScalingFactor(), randomScalingFactor(), randomScalingFactor(), randomScalingFactor(), randomScalingFactor(), randomScalingFactor(),randomScalingFactor()],
+                    fill: false,
+                    borderDash: [5, 5],
+                }]
+            },
+            options: {
+                responsive: true,
+                legend: {
+                    position: 'bottom',
+                },
+                hover: {
+                    mode: 'label'
+                },
+                scales: {
+                    xAxes: [{
+                        display: true,
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Hour'
+                        }
+                    }],
+                    yAxes: [{
+                        display: true,
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'CO Level'
+                        }
+                    }]
+                },
+                title: {
+                    display: true,
+                    text: 'Testing adding data and removing data'
+                }
+            }
+        };
+        //console.log(config.data.datasets[0].data[0]);
+        //populate the arrays with initial data fetched in the function above
+        for(var i=0;i<output.length;i++){
+        config.data.labels.push(String(output[i].timestamp.getUTCFullYear()+"-"+(output[i].timestamp.getUTCMonth()+1)+"-"+output[i].timestamp.getUTCDate()));    
+        config.data.datasets[0].data.push(output[i].value);
+        };
+        //config.data.datasets[0].data.push(randomScalingFactor());
+        //config.data.labels.push("9");
+       
+        $.each(config.data.datasets, function(i, dataset) {
+            var background = randomColor(0.5);
+            dataset.borderColor = background;
+            dataset.backgroundColor = background;
+            dataset.pointBorderColor = background;
+            dataset.pointBackgroundColor = background;
+            dataset.pointBorderWidth = 1;
+        });
+
+        window.onload = function() {
+            var ctx = document.getElementById("canvas").getContext("2d");
+            window.myLine = new Chart(ctx, config);
+        };
+
+        var latestUpdateTime=output[output.length-1].timestamp;
+        var inter = setInterval(function () {
+            updateData();
+        }, 2000);
+
+        function updateData() {
+            var my_url="https://thingspeak.com/channels/107738/feeds/last.json";
+            var latestOutput=[];
+            //var newData = GenData(N,lastUpdateTime);
+            //lastUpdateTime = newData[newData.length-1].timestamp;
+            
+            $.ajax({
+                    url: my_url,
+                    async: false,
+                    dataType: 'json',
+                    success: function(data) {
+                        //alert(data.length);
+                        //alert(data.entry_id);
+                        //alert()
+                        //for(var i in data){
+                        latestOutput.push({value:data.field1, timestamp: new Date(data.created_at)});
+                        //console.log("latest va 1 : "+data.field1);
+                        //}
+                    }
+                });
+            if(+latestUpdateTime == +latestOutput[0].timestamp){
+                console.log("equal timestamp so didnt update");
+            }
+            else{
+                latestUpdateTime=latestOutput[0].timestamp;
+            config.data.labels.push(String(latestOutput[0].timestamp.getUTCFullYear()+"-"+(latestOutput[0].timestamp.getUTCMonth()+1)+"-"+latestOutput[0].timestamp.getUTCDate()));
+            config.data.datasets[0].data.push(latestOutput[0].value);
+            window.myLine.update();
+            }
+        }
+
+        
+    </script>
+</body>
+
+</html>
