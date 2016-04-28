@@ -33,14 +33,21 @@ while True:
   radio.read(rcvdMsg, radio.getDynamicPayloadSize())
   # print(isinstance(rcvdMsg, (int, long)))
   print(rcvdMsg)
-  print("rcvdddd {}".format(rcvdMsg[0]))
-  params = urllib.urlencode({'field1': rcvdMsg[0], 'key':'14GN3ZU37NXWRU86'})
+  print("rcvdddd {}".format(rcvdMsg[]))
+  print("translating...")
+  string=""
+
+  for n in rcvdMsg:
+    if n>32 and n<=126:
+      string+=chr(n)
+  print("decoded msg is {}".format(string))
+  params = urllib.urlencode({'field1': float(rcvdMsg), 'key':'14GN3ZU37NXWRU86'})
   headers = {"Content-type": "application/x-www-form-urlencoded","Accept": "text/plain"}
   conn = httplib.HTTPConnection("api.thingspeak.com:80")
   conn.request("POST", "/update", params, headers)
   response = conn.getresponse()
   print response.status, response.reason
   data = response.read()
-  time.sleep(1)
+  time.sleep(2)
 
   
