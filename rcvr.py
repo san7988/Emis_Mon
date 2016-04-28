@@ -25,8 +25,7 @@ radio.startListening()
 
 while True:
     while not radio.available(0):
-#	print "sleeping"        
-	time.sleep(1/100)
+      time.sleep(1/100)
 
     rcvdMsg=[]
     radio.read(rcvdMsg, radio.getDynamicPayloadSize())
@@ -34,10 +33,10 @@ while True:
     print(rcvdMsg)
     print("rcvdddd {}".format(rcvdMsg))
 
-  #  print("translating...")
+    print("translating...")
     string=""
 
-#    for n in rcvdMsg:
-   #     if n>32 and n<=126:
-      #      string+=chr(n)
-    #print("decoded msg is {}".format(string))
+    for n in rcvdMsg:
+      if n>32 and n<=126:
+        string+=chr(n)
+    print("decoded msg is {}".format(string))
