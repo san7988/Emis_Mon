@@ -1,4 +1,20 @@
-nslating...
+STATUS	 = 0x0e RX_DR=0 TX_DS=0 MAX_RT=0 RX_P_NO=7 TX_FULL=0
+RX_ADDR_P0-1	\00 = 0xe7e7e7e7e7 0xf0f0f0f0e1
+RX_ADDR_P2-5	\00 = 0xc3 0xc4 0xc5 0xc6 
+TX_ADDR		 = 0xe7e7e7e7e7
+RX_PW_P0-6	\00 = 0x00 0x20 0x00 0x00 0x00 0x00 
+EN_AA		 = 0x3f 
+EN_RXADDR	\00 = 0x03 
+RF_CH		 = 0x76 
+RF_SETUP	\00 = 0x01 
+CONFIG		 = 0x0f 
+DYNPD/FEATURE	\00 = 0x3f 0x06 
+Data Rate	 = 1MBPS
+Model		 = nRF24l01+
+CRC Length	 = 16 bits
+PA Power	 = PA_MIN
+
+translating...
 decoded msg is 38.0000
 [51, 56, 46, 48, 48, 48, 48, 0, 7, 2]
 rcvdddd [51, 56, 46, 48, 48, 48, 48, 0, 7, 2]
