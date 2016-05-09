@@ -41,7 +41,7 @@ while True:
     if n>32 and n<=126:
       string+=chr(n)
   print("decoded msg is {}".format(string))
-  params = urllib.urlencode({'field1': float(rcvdMsg), 'key':'14GN3ZU37NXWRU86'})
+  params = urllib.urlencode({'field1': float(string), 'key':'14GN3ZU37NXWRU86'})
   headers = {"Content-type": "application/x-www-form-urlencoded","Accept": "text/plain"}
   conn = httplib.HTTPConnection("api.thingspeak.com:80")
   conn.request("POST", "/update", params, headers)
