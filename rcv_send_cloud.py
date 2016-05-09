@@ -33,7 +33,7 @@ while True:
   radio.read(rcvdMsg, radio.getDynamicPayloadSize())
   # print(isinstance(rcvdMsg, (int, long)))
   print(rcvdMsg)
-  print("rcvdddd {}".format(rcvdMsg[]))
+  print("rcvdddd {}".format(rcvdMsg))
   print("translating...")
   string=""
 
